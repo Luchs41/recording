@@ -33,7 +33,7 @@ function App() {
   return (
     <div className={style.container}>
       <CameraComponent />
-      <div className={style.test}>hi</div>
+      <p className={style.test}>hi</p>
     </div>
   );
 }
