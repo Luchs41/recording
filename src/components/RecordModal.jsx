@@ -1,18 +1,6 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import style from './RecordModal.module.css';
-// Styles for the modal
-const modalStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    maxWidth: '400px',
-    maxHeight: '300px',
-    margin: 'auto',
-    padding: '20px',
-  },
-};
 
 // Modal component
 const RecordModal = ({ isOpen, closeModal }) => {
