@@ -110,30 +110,34 @@ function CameraComponent({ count, setCount, hasPermission, setHasPermission }) {
     // 전송 전 이미지를 압축
     // const compressedData = canvas.toDataURL('image/jpeg', 0.2);
     // console.log(compressedData);
-    canvas.toBlob(blob => {
-      const formData = new FormData();
-      formData.append('file', blob, 'file.jpg');
-      console.log(formData);
-      axios
-        .post(
-          `http://34.69.53.183:8090/inference/image/${user_id}/${uuid}/${exercise_type}`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
+    canvas.toBlob(
+      blob => {
+        const formData = new FormData();
+        formData.append('file', blob, 'file.jpg', { type: 'image/jpeg' });
+        console.log(formData);
+        axios
+          .post(
+            `http://34.69.53.183:8090/inference/image/${user_id}/${uuid}/${exercise_type}`,
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
             },
-          },
-        )
-        .then(res => {
-          console.log(res.data);
-          if (res.data > count) {
-            setCount(res.data);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    });
+          )
+          .then(res => {
+            console.log(res.data);
+            if (res.data > count) {
+              setCount(res.data);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      },
+      'image/jpeg',
+      0.2,
+    );
     // 전송함
     // http://34.69.53.183:8090/inference/image/{user_id}/{uuid}으로 요청
     // axios
