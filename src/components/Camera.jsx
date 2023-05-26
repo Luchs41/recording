@@ -11,7 +11,7 @@ function CameraComponent({ count, setCount, hasPermission, setHasPermission }) {
   // test용 값
   const user_id = 'test';
   const uuid = '123';
-  const exercise_type = 'pushup-left-arm';
+  const exercise_type = 'squat-left-leg';
 
   // 사용자가 카메라 접근 허용을 했는지 확인
   // 만약 허용을 안했다면, 허용을 요청
@@ -66,50 +66,13 @@ function CameraComponent({ count, setCount, hasPermission, setHasPermission }) {
       </div>
     );
   }
-  //카메라도 있고, 허용도 됐다면 socket 연결 후 카메라 보여줌
-  // const socket = new WebSocket('ws://localhost:3000');
-  // socket.onopen = () => {
-  //   console.log('connected');
-  // };
-  // socket.onmessage = (message) => {
-  //   console.log(message);
-  // };
-  // socket.onclose = () => {
-  //   console.log('disconnected');
-  // };
-  // socket.onerror = (err) => {
-  //   console.log(err);
-  // };
-  //소켓 연결에 성공했다면, 3초에 한번씩 카메라 이미지를 서버로 보냄
-  // if (socket.readyState === WebSocket.OPEN) {
-  //   setInterval(() => {
-  //     const canvas = document.createElement('canvas');
-  //     canvas.width = videoRef.current.videoWidth;
-  //     canvas.height = videoRef.current.videoHeight;
-  //     canvas.getContext('2d').drawImage(videoRef.current, 0, 0);
-  //     const data = canvas.toDataURL('image/png');
-  //     // 전송 전 이미지를 압축
-  //     const compressedData = canvas.toDataURL('image/jpeg', 0.20);
-  // 전송함
-  //     socket.send(data);
-  //     console.log(compressedData);
-  //   }, 3000);
-  // }
-  //서버에서 받은 카운트를 setCount 함수를 이용해서 상태를 변경
-  // socket.onmessage = (message) => {
-  //   console.log(message);
-  //   setCount(message.data);
-  // };
-  // 카메라 화면을 1초마다 캡쳐해서 서버로 보냄
-  // http 요청으로 보내며, 서버에서 받은 카운트를 setCount 함수를 이용해서 상태를 변경
+
   setInterval(() => {
     const canvas = document.createElement('canvas');
     canvas.width = videoRef.current.videoWidth;
     canvas.height = videoRef.current.videoHeight;
     canvas.getContext('2d').drawImage(videoRef.current, 0, 0);
-    // 전송 전 이미지를 압축
-    // const compressedData = canvas.toDataURL('image/jpeg', 0.2);
-    // console.log(compressedData);
+
     canvas.toBlob(
       blob => {
         const formData = new FormData();
@@ -126,9 +89,9 @@ function CameraComponent({ count, setCount, hasPermission, setHasPermission }) {
             },
           )
           .then(res => {
-            console.log(res.data);
+            console.log(res.data.count);
             if (res.data > count) {
-              setCount(res.data);
+              setCount(res.data.count);
             }
           })
           .catch(err => {
@@ -136,32 +99,9 @@ function CameraComponent({ count, setCount, hasPermission, setHasPermission }) {
           });
       },
       'image/jpeg',
-      0.2,
+      0.1,
     );
-    // 전송함
-    // http://34.69.53.183:8090/inference/image/{user_id}/{uuid}으로 요청
-    // axios
-    //   .post(
-    //     `http://34.69.53.183:8090/inference/image/${user_id}/${uuid}/${exercise_type}`,
-    //     {
-    //       file: compressedData,
-    //     },
-    //     {
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //     },
-    //   )
-    //   .then(res => {
-    //     console.log(res.data);
-    //     if (res.data > count) {
-    //       setCount(res.data);
-    //     }
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
-  }, 3000);
+  }, 5000);
 
   return (
     <video playsInline autoPlay ref={videoRef} className={styles.camera} />
